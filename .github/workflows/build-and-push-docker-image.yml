@@ -20,8 +20,9 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - uses: uraimo/run-on-arch-action@v2
+      
       - name: Build Docker image
+        uses: uraimo/run-on-arch-action@v2
         with:
           arch: aarch64
           distro: ubuntu_latest
