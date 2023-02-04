@@ -3,7 +3,7 @@ name: Build And Push Docker Image
 on: workflow_dispatch
 
 env:
-  IMAGE_NAME: hagb/docker-easyconnect
+  IMAGE_NAME: milespoupart/docker-easyconnect-arm64
 
 jobs:
   build:
@@ -32,16 +32,24 @@ jobs:
 
           docker-build hagb/docker-easyconnect:build -f Dockerfile.build .
 
-          docker-build ${{ env.IMAGE_NAME }}:${prefix}cli -f Dockerfile.cli .
-
-          docker-build ${{ env.IMAGE_NAME }}:${prefix}7.6.3 --build-arg EC_URL=$(cat ec_urls/7.6.3.txt) -f Dockerfile .
-          docker-build ${{ env.IMAGE_NAME }}:${prefix}7.6.7 --build-arg EC_URL=$(cat ec_urls/7.6.7.txt) -f Dockerfile .
-
-          docker-build ${{ env.IMAGE_NAME }}:${prefix}vncless-7.6.3 --build-arg EC_URL=$(cat ec_urls/7.6.3.txt) -f Dockerfile.vncless .
-          docker-build ${{ env.IMAGE_NAME }}:${prefix}vncless-7.6.7 --build-arg EC_URL=$(cat ec_urls/7.6.7.txt) -f Dockerfile.vncless .
+          docker-build ${{ env.IMAGE_NAME }}:${prefix}7.6.3 --build-arg EC_URL=$(cat ec_urls/7.6.3.txt) --build-arg EC_DEB_PATH=$(cat ec_deb_path/7.6.3.txt) -f Dockerfile .
+          docker-build ${{ env.IMAGE_NAME }}:${prefix}7.6.7 --build-arg EC_URL=$(cat ec_urls/7.6.7.txt) --build-arg EC_DEB_PATH=$(cat ec_deb_path/7.6.7.txt) -f Dockerfile .
 
           docker tag ${{ env.IMAGE_NAME }}:${prefix}7.6.3 ${{ env.IMAGE_NAME }}:${latest_name}
           docker image rm hagb/docker-easyconnect:build
+
+          # docker image build -f Dockerfile.build -t hagb/docker-easyconnect:build .
+          # docker image build \
+          #     --build-arg EC_URL=https://download.sangfor.com.cn/download/product/sslvpn/SSLVPN%E4%BF%A1%E5%88%9B%E5%AE%A2%E6%88%B7%E7%AB%AF/%E7%BB%9F%E4%BF%A1UOS%20%E9%B2%B2%E9%B9%8F%20SSL%20VPN%E5%AE%A2%E6%88%B7%E7%AB%AF.zip \
+          #     --build-arg EC_DEB_PATH=UOS_EasyConnect_arm64.deb \
+          #     --tag hagb/docker-easyconnect -f Dockerfile .
+
+
+          # docker image build -f Dockerfile.build -t hagb/docker-easyconnect:build .
+          # docker image build \
+          #     --build-arg EC_URL=https://download.sangfor.com.cn/download/product/sslvpn/SSLVPN%E4%BF%A1%E5%88%9B%E5%AE%A2%E6%88%B7%E7%AB%AF/%E7%BB%9F%E4%BF%A1UOS%20%E6%B5%B7%E6%80%9D%E9%BA%92%E9%BA%9F990%20SSL%20VPN%E5%AE%A2%E6%88%B7%E7%AB%AF.zip \
+          #     --build-arg EC_DEB_PATH=02-升级包及安装文件/EasyConnect_UOS_arm64-20220302.deb \
+          #     --tag hagb/docker-easyconnect -f Dockerfile .
 
       - name: Push Docker image
         run: |
