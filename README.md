@@ -10,6 +10,12 @@
 
 详细用法见于 [doc/usage.md](doc/usage.md)，常见问题见于 [doc/faq.md](doc/faq.md)，自行构建可参照构建说明 [doc/build.md](doc/build.md)。
 
+```
+mkdir /home/EZCon/
+mkdir /home/EZCon/.ecdata
+docker run -d --name EZConn --device /dev/net/tun --cap-add NET_ADMIN -ti -e PASSWORD=xxxx -v /home/EZCon/.ecdata:/root -p 0.0.0.0:5901:5901 -p 0.0.0.0:23335:1080 -p 0.0.0.0:18885:8888 --restart=always -e IPTABLES_LEGACY=1 milespoupart/docker-easyconnect-arm64:dev-7.6.7
+```
+
 ## 简明使用步骤
 
 ### 纯命令行版
